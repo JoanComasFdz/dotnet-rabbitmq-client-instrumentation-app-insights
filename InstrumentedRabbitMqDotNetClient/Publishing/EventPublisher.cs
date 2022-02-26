@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using InstrumentedRabbitMqDotNetClient.Connection;
+using InstrumentedRabbitMqDotNetClient.Contracts;
+using InstrumentedRabbitMqDotNetClient.Instrumentation;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using InstrumentedRabbitMqDotNetClient.Contracts;
-using InstrumentedRabbitMqDotNetClient.Instrumentation;
 
-namespace InstrumentedRabbitMqDotNetClient
+namespace InstrumentedRabbitMqDotNetClient.Publishing
 {
     internal class EventPublisher : IEventPublisher
     {

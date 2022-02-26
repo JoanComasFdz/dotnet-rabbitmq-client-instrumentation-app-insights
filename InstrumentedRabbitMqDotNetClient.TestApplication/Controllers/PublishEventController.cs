@@ -1,4 +1,5 @@
 ﻿using System;
+using InstrumentedRabbitMqDotNetClient.Publishing;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InstrumentedRabbitMqDotNetClient.TestApplication.Controllers

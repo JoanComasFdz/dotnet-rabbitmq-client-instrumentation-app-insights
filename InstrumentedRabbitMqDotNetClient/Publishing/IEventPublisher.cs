@@ -1,6 +1,6 @@
 ﻿using InstrumentedRabbitMqDotNetClient.Contracts;
 
-namespace InstrumentedRabbitMqDotNetClient
+namespace InstrumentedRabbitMqDotNetClient.Publishing
 {
     /// <summary>
     /// <para>
