@@ -3,7 +3,7 @@ using InstrumentedRabbitMqDotNetClient.Contracts;
 
 namespace InstrumentedRabbitMqDotNetClient.TestApplication
 {
-    public class TestEvent : IEvent
+    public record TestEvent : IEvent
     {
         public string EventName => "test.event";
 

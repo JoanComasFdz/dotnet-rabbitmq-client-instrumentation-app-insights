@@ -15,11 +15,11 @@ namespace InstrumentedRabbitMqDotNetClient.TestApplication
 
         public async Task HandleEventAsync(TestEvent2 theEvent)
         {
-            _logger.LogInformation("The Test2Subscription will handle event {event}...", theEvent.EventName);
+            _logger.LogInformation("The Test2Subscription2 will handle event {event}...", theEvent.EventName);
 
             await Task.Delay(130);
 
-            _logger.LogInformation("The Test2Subscription has finished processing event {event}.", theEvent.EventName);
+            _logger.LogInformation("The Test2Subscription2 has finished processing event {event}.", theEvent.EventName);
         }
     }
 }
