@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using InstrumentedRabbitMqDotNetClient.Connection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -11,7 +12,7 @@ namespace InstrumentedRabbitMqDotNetClient
     internal class EventPublisher : IEventPublisher
     {
         private readonly RabbitMQConfiguration _configuration;
-        private readonly IEventBusChannelProvider _channelProvider;
+        private readonly IChannelProvider _channelProvider;
         private readonly ILogger<EventPublisher> _logger;
         private readonly IBasicProperties _basicProperties;
         private readonly IRabbitMQDiagnosticSource _rabbitMQDiagnosticSource;
@@ -19,7 +20,7 @@ namespace InstrumentedRabbitMqDotNetClient
         public EventPublisher(
             ILoggerFactory loggerFactory,
             RabbitMQConfiguration configuration,
-            IEventBusChannelProvider channelProvider,
+            IChannelProvider channelProvider,
             IRabbitMQDiagnosticSource rabbitMQDiagnosticSource)
         {
             _configuration = configuration;

@@ -1,12 +1,12 @@
 ﻿using RabbitMQ.Client;
 
-namespace InstrumentedRabbitMqDotNetClient
+namespace InstrumentedRabbitMqDotNetClient.Connection
 {
-    internal class EventBusChannelProvider : IEventBusChannelProvider
+    internal class ChannelProvider : IChannelProvider
     {
         private readonly IModel _channel;
 
-        public EventBusChannelProvider(RabbitMQConfiguration configuration, IConnectionFactory connectionFactory)
+        public ChannelProvider(RabbitMQConfiguration configuration, IConnectionFactory connectionFactory)
         {
             var connection = connectionFactory.CreateConnection();
             _channel = connection.CreateModel();

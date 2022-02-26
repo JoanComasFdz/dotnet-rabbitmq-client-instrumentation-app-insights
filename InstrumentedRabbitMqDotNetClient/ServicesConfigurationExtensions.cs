@@ -47,7 +47,7 @@ namespace InstrumentedRabbitMqDotNetClient
             RegisterEventSubscriptions(services);
 
             services.AddSingleton(rabbitMQConfiguration);
-            services.AddSingleton<IEventBusChannelProvider, EventBusChannelProvider>();
+            services.AddSingleton<IChannelProvider, ChannelProvider>();
             services.AddSingleton<IEventSubscriptionFactory, EventSubscriptionFactory>();
             services.AddSingleton<IFluentConnector, FluentConnector>();
             services.AddSingleton<IConnectionFactory>(new ConnectionFactory
