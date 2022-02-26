@@ -3,34 +3,36 @@ using System.Threading;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 
-namespace InstrumentedRabbitMqDotNetClient
+namespace InstrumentedRabbitMqDotNetClient.Connection
 {
-    internal class ConnectionFactoryConnector : IConnectionFactoryConnector
+    internal class FluentConnector : IFluentConnector
     {
-        private readonly ILogger<ConnectionFactoryConnector> _logger;
+        private readonly ILogger<FluentConnector> _logger;
         private readonly IConnectionFactory _connectionFactory;
 
-        public ConnectionFactoryConnector(ILogger<ConnectionFactoryConnector> logger, IConnectionFactory connectionFactory)
+        public FluentConnector(
+            ILogger<FluentConnector> logger,
+            IConnectionFactory connectionFactory)
         {
             _logger = logger;
             _connectionFactory = connectionFactory;
         }
 
-        public ConnectionFactoryConnectorWithDurationAndInterval TryFor(TimeSpan tryToConnectForThisPeriodOfTime)
+        public FluentConnectorWithDurationAndInterval TryFor(TimeSpan tryToConnectForThisPeriodOfTime)
         {
             var until = DateTime.UtcNow.Add(tryToConnectForThisPeriodOfTime);
-            return new ConnectionFactoryConnectorWithDurationAndInterval(_logger, _connectionFactory, until);
+            return new FluentConnectorWithDurationAndInterval(_logger, _connectionFactory, until);
         }
     }
 
-    internal class ConnectionFactoryConnectorWithDurationAndInterval
+    internal class FluentConnectorWithDurationAndInterval
     {
-        private readonly ILogger<ConnectionFactoryConnector> _logger;
+        private readonly ILogger<FluentConnector> _logger;
         private readonly IConnectionFactory _connectionFactory;
         private readonly DateTime _until;
 
-        public ConnectionFactoryConnectorWithDurationAndInterval(
-            ILogger<ConnectionFactoryConnector> logger,
+        public FluentConnectorWithDurationAndInterval(
+            ILogger<FluentConnector> logger,
             IConnectionFactory connectionFactory,
             in DateTime until)
         {
@@ -39,21 +41,24 @@ namespace InstrumentedRabbitMqDotNetClient
             _until = until;
         }
 
-        public ConnectionFactoryConnectorExecuter RetryEvery(TimeSpan interval)
+        public FluentConnectorToConnect RetryEvery(TimeSpan interval)
         {
-            return new ConnectionFactoryConnectorExecuter(_logger, _connectionFactory, _until, interval);
+            return new FluentConnectorToConnect(_logger, _connectionFactory, _until, interval);
         }
     }
 
-    internal class ConnectionFactoryConnectorExecuter
+    internal class FluentConnectorToConnect
     {
-        private readonly ILogger<ConnectionFactoryConnector> _logger;
+        private readonly ILogger<FluentConnector> _logger;
         private readonly IConnectionFactory _connectionFactory;
         private readonly DateTime _until;
         private readonly TimeSpan _interval;
 
-        public ConnectionFactoryConnectorExecuter(ILogger<ConnectionFactoryConnector> logger,
-            IConnectionFactory connectionFactory, in DateTime until, TimeSpan interval)
+        public FluentConnectorToConnect(
+            ILogger<FluentConnector> logger,
+            IConnectionFactory connectionFactory,
+            in DateTime until,
+            TimeSpan interval)
         {
             _logger = logger;
             _connectionFactory = connectionFactory;
@@ -74,8 +79,11 @@ namespace InstrumentedRabbitMqDotNetClient
                 }
                 catch (Exception e)
                 {
-                    _logger.LogInformation("Connection to event bus failed, trying again in {intervalInSeconds} seconds until {untilInLongTimeString}... Error is: {ConnectionError}",
-                        _interval.Seconds, _until.ToLongTimeString(), e.Message);
+                    _logger.LogInformation(
+                        "Connection to event bus failed, trying again in {intervalInSeconds} seconds until {untilInLongTimeString}... Error is: {ConnectionError}",
+                        _interval.Seconds,
+                        _until.ToLongTimeString(),
+                        e.Message);
                     connectionException = e;
 
                     Thread.Sleep(_interval);
@@ -85,7 +93,7 @@ namespace InstrumentedRabbitMqDotNetClient
 
             if (result == null)
             {
-                throw new Exception($"Could not connect to event bus after trying for '{_interval}'.");
+                throw new Exception($"Could not connect to RabbitMQs after trying for '{_interval}'.");
             }
 
             return result;

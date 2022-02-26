@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using InstrumentedRabbitMqDotNetClient.Connection;
 using InstrumentedRabbitMqDotNetClient.Contracts;
 using InstrumentedRabbitMqDotNetClient.Instrumentation;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,7 @@ namespace InstrumentedRabbitMqDotNetClient
         private readonly ILogger _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventSubscriptionFactory _eventSubscriptionFactory;
-        private readonly IConnectionFactoryConnector _connector;
+        private readonly IFluentConnector _connector;
         private readonly IRabbitMQDiagnosticSource _rabbitMQDiagnosticSource;
 
         private IConnection _connection;
@@ -30,7 +31,7 @@ namespace InstrumentedRabbitMqDotNetClient
             ILoggerFactory loggerFactory,
             IServiceProvider serviceProvider,
             IEventSubscriptionFactory eventSubscriptionFactory,
-            IConnectionFactoryConnector connector,
+            IFluentConnector connector,
             IRabbitMQDiagnosticSource rabbitMQDiagnosticSource)
         {
             _configuration = configuration;

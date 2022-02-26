@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using InstrumentedRabbitMqDotNetClient.Connection;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using InstrumentedRabbitMqDotNetClient.Contracts;
@@ -48,7 +49,7 @@ namespace InstrumentedRabbitMqDotNetClient
             services.AddSingleton(rabbitMQConfiguration);
             services.AddSingleton<IEventBusChannelProvider, EventBusChannelProvider>();
             services.AddSingleton<IEventSubscriptionFactory, EventSubscriptionFactory>();
-            services.AddSingleton<IConnectionFactoryConnector, ConnectionFactoryConnector>();
+            services.AddSingleton<IFluentConnector, FluentConnector>();
             services.AddSingleton<IConnectionFactory>(new ConnectionFactory
             {
                 HostName = rabbitMQConfiguration.Host,
