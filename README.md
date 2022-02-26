@@ -1,2 +1,5 @@
 # dotnet-rabbitmq-client-instrumentation-app-insights
 A RabbitMQ client for .NET with instrumentation so that events are properly correlated in Application Insights
+
+## How to use
+Explore the `InstrumentedRabbitMqDotNetClient.TestApplication` to understand how to use it.

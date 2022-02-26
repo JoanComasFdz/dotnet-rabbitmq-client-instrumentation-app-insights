@@ -1,0 +1,50 @@
+﻿[*.cs]
+
+# CA1062: Validate arguments of public methods: Most classes are instantiated by Dependency Injection, so constructor parameters won't be null.
+dotnet_diagnostic.CA1062.severity = none
+
+# CA1303: Do not pass literals as localized parameters: Logs will always be in English.
+# dotnet_code_quality.CA1303.excluded_type_names_with_derived_types = LoggerExtensions, ArgumentNullException
+dotnet_diagnostic.CA1303.severity = none
+
+# CA1707: Identifiers should not contain underscores: Environment variables contain underscore.
+dotnet_diagnostic.CA1707.severity = none
+
+# CA1819: Properties should not return arrays: Arrays are used for the DTO classes.
+dotnet_diagnostic.CA1819.severity = none
+
+# CA2007: Consider calling ConfigureAwait on the awaited task: .NET Core does not have a SynchronizationContet so ConfigureAwait(false) is useless: https://stackoverflow.com/questions/42053135/configureawaitfalse-relevant-in-asp-net-core
+dotnet_diagnostic.CA2007.severity = none
+
+# CA2227: Collection properties should be read only: This approach is used for the DTOs.
+dotnet_diagnostic.CA2227.severity = none
+
+# CS1591: Missing XML comment for publicly visible type or member: Only document important / complex parts.
+dotnet_diagnostic.CS1591.severity = none
+
+# SA1602: Enumeration items should be documented: Only document important / complex parts.
+dotnet_diagnostic.SA1602.severity = none
+
+# SA1601: Partial elements should be documented: Only document important / complex parts.
+dotnet_diagnostic.SA1601.severity = none
+
+# SA1600: Elements should be documented: Only document important / complex parts.
+dotnet_diagnostic.SA1600.severity = none
+
+# SA1633: File should have header: No.
+dotnet_diagnostic.SA1633.severity = none
+
+# SA1413: Use trailing comma in multi-line initializers: We choose to follow resharper and remove all unnecesary characters.
+dotnet_diagnostic.SA1413.severity = none
+
+# SA1309: Field names should not begin with underscore: We choose this coding style.
+dotnet_diagnostic.SA1309.severity = none
+
+# SA1101: Prefix local calls with this: We choose this coding style.
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1300: Element should begin with upper-case letter: "api" is the chosen project and namespace name.
+dotnet_diagnostic.SA1300.severity = none
+
+# SA1200: Using directives should be placed correctly: VS tempalte default. Only useful for edge cases.
+dotnet_diagnostic.SA1200.severity = none

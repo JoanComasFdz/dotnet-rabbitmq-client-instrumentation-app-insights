@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AppInsights.TelemetryInitializers" Version="1.2.1371" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InstrumentedRabbitMqDotNetClient.Interfaces\InstrumentedRabbitMqDotNetClient.Contracts.csproj" />
+    <ProjectReference Include="..\InstrumentedRabbitMqDotNetClient\InstrumentedRabbitMqDotNetClient.csproj" />
+  </ItemGroup>
+
+</Project>
