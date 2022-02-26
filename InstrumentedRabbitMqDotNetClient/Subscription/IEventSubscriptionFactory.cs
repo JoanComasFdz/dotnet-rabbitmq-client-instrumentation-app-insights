@@ -8,6 +8,8 @@ namespace InstrumentedRabbitMqDotNetClient.Subscription
     {
         IEnumerable<string> EventNames { get; }
 
-        IEventSubscription CreateEventBusSubscription(IServiceProvider serviceProvider, string eventName);
+        EventSubscriptionWrapper CreateEventBusSubscription(IServiceProvider serviceProvider, string eventName);
+
+        Type GetEventType(string eventName);
     }
 }

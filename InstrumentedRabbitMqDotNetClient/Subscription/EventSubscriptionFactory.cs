@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using InstrumentedRabbitMqDotNetClient.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -9,7 +8,7 @@ namespace InstrumentedRabbitMqDotNetClient.Subscription
 {
     internal class EventSubscriptionFactory : IEventSubscriptionFactory
     {
-        private readonly Dictionary<string, Type> _subscriptionTypesByEventName;
+        private readonly Dictionary<string, EventSubscriptionInfo> _subscriptionTypesByEventName;
         private readonly ILogger<EventSubscriptionFactory> _logger;
 
         public IEnumerable<string> EventNames => _subscriptionTypesByEventName.Keys;
@@ -17,55 +16,44 @@ namespace InstrumentedRabbitMqDotNetClient.Subscription
         public EventSubscriptionFactory(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<EventSubscriptionFactory>();
-            _subscriptionTypesByEventName = new Dictionary<string, Type>();
+            _subscriptionTypesByEventName = new Dictionary<string, EventSubscriptionInfo>();
 
-            var typesToRegister = GetTypesToRegisterAsSubscriptions();
-            RegisterTypesAsSubscriptions(typesToRegister);
+            var typesToRegister = EventSubscriptionSearcher.GetEventSubscriptionTypes();
+            SaveTypesAsSubscriptions(typesToRegister);
         }
-
-        private static List<Type> GetTypesToRegisterAsSubscriptions()
+        
+        private void SaveTypesAsSubscriptions(IEnumerable<Type> typesToRegister)
         {
-            var assembly = Assembly
-                .GetEntryAssembly();
-
-            var typesToRegister = assembly
-                .GetExportedTypes()
-                .Where(t => t.GetInterfaces().Contains(typeof(IEventSubscription)))
-                .Select(t => t)
-                .ToList();
-            return typesToRegister;
-        }
-
-        private void RegisterTypesAsSubscriptions(IEnumerable<Type> typesToRegister)
-        {
-            foreach (var type in typesToRegister)
+            foreach (var subscriptionType in typesToRegister)
             {
-                var eventSubscriptionAttribute = type.GetCustomAttribute<EventSubscriptionAttribute>();
-                if (eventSubscriptionAttribute == null)
-                {
-                    throw new InvalidOperationException(
-                        $"Event subscription in type {type.Name} is missing EventSubscription attribute");
-                }
+                var eventSubscriptionInterfaceType = subscriptionType.GetInterface(typeof(IEventSubscription<>).Name);
+                var eventType = eventSubscriptionInterfaceType.GetGenericArguments().First();
+                var instance = Activator.CreateInstance(eventType);
+                var eventName = (string)eventType.GetProperty("EventName").GetValue(instance);
 
-                _subscriptionTypesByEventName.Add(eventSubscriptionAttribute.EventName, type);
+                _subscriptionTypesByEventName.Add(eventName, new EventSubscriptionInfo {EventSubscriptionType = subscriptionType, EventType = eventType});
             }
         }
 
-        public IEventSubscription CreateEventBusSubscription(IServiceProvider serviceProvider, string eventName)
+        public EventSubscriptionWrapper CreateEventBusSubscription(IServiceProvider serviceProvider, string eventName)
         {
             try
             {
-                var subscriptionType = _subscriptionTypesByEventName[eventName];
-                var service = serviceProvider.GetService(subscriptionType);
-                var eventBusSubscription = (IEventSubscription)service;
-                return eventBusSubscription;
+                var subscriptionInfo = _subscriptionTypesByEventName[eventName];
+                var subscriptionInstance = serviceProvider.GetService(subscriptionInfo.EventSubscriptionType);
+
+                return new EventSubscriptionWrapper(subscriptionInfo.EventSubscriptionType, subscriptionInstance);
             }
             catch (Exception)
             {
                 _logger.LogCritical("Unable to instantiate an event subscription for event {eventName}. Check if there is a type being injected in the constructor which is not properly registered in the Startup.ConfigureServices() method.", eventName);
                 throw;
             }
+        }
 
+        public Type GetEventType(string eventName)
+        {
+            return _subscriptionTypesByEventName[eventName].EventType;
         }
     }
 }

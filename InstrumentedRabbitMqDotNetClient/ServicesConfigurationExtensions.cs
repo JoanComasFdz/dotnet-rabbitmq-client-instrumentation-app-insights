@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using InstrumentedRabbitMqDotNetClient.Connection;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
@@ -21,7 +18,7 @@ namespace InstrumentedRabbitMqDotNetClient
     {
         /// <summary>
         /// <para>
-        /// Configures RabbitMQ so it automatically binds any class having the <see cref="EventSubscriptionAttribute"/> declared.
+        /// Configures RabbitMQ so it automatically binds any class implementing the <see cref="IEventSubscription{TEvent}"/> interface.
         /// </para>
         /// <para>
         /// <remarks>
@@ -79,7 +76,7 @@ namespace InstrumentedRabbitMqDotNetClient
 
         private static void RegisterEventSubscriptions(IServiceCollection services)
         {
-            var typesToRegister = GetEventSubscriptionTypes();
+            var typesToRegister = EventSubscriptionSearcher.GetEventSubscriptionTypes();
 
             foreach (var type in typesToRegister)
             {
@@ -87,20 +84,6 @@ namespace InstrumentedRabbitMqDotNetClient
             }
 
             Console.WriteLine($"Registered '{typesToRegister.Count}' subscriptions: '{string.Join($"{Environment.NewLine} - ", typesToRegister)}'.");
-        }
-
-        private static List<Type> GetEventSubscriptionTypes()
-        {
-            var callingAssembly = Assembly
-                .GetEntryAssembly();
-            Console.WriteLine($"Calling assembly is '{callingAssembly.FullName}'");
-
-            var typesToRegister = callingAssembly
-                .GetExportedTypes()
-                .Where(t => t.GetInterfaces().Contains(typeof(IEventSubscription)))
-                .Select(t => t)
-                .ToList();
-            return typesToRegister;
         }
     }
 }

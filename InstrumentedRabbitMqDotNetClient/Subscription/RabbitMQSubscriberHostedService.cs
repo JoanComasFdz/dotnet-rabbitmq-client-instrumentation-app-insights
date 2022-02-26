@@ -8,6 +8,7 @@ using InstrumentedRabbitMqDotNetClient.Instrumentation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -165,17 +166,20 @@ namespace InstrumentedRabbitMqDotNetClient.Subscription
         {
             using var scope = _serviceProvider.CreateScope();
             using var loggerSCope = _logger.BeginScope("{@RequestId}", requestId);
-            IEventSubscription subscription = default;
+            EventSubscriptionWrapper wrapper = default;
             try
             {
-                subscription = _eventSubscriptionFactory.CreateEventBusSubscription(scope.ServiceProvider, eventName);
-                await subscription.HandleEventAsync(content);
+                var eventType = _eventSubscriptionFactory.GetEventType(eventName);
+                var parsedEvent = (IEvent) JsonConvert.DeserializeObject(content, eventType);
+                wrapper = _eventSubscriptionFactory.CreateEventBusSubscription(scope.ServiceProvider, eventName);
+                
+                await wrapper.HandleEventAsync(parsedEvent);
             }
             catch (Exception ex)
             {
                 _logger.LogError(
                     "Error executing event handler '{Handler}' for message '{Content}': {ExceptionType}:{ExceptionMessage}.\r\nStackTrace:\r\n{LibEventBusMessageSubscriptionStackTrace}",
-                    subscription.GetType().Name,
+                    wrapper.SubscriptionType.Name,
                     content,
                     ex.GetType(),
                     ex.Message,

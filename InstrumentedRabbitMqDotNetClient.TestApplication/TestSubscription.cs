@@ -5,8 +5,7 @@ using InstrumentedRabbitMqDotNetClient.Publishing;
 
 namespace InstrumentedRabbitMqDotNetClient.TestApplication
 {
-    [EventSubscription("test.event")]
-    public class TestSubscription : IEventSubscription
+    public class TestSubscription : IEventSubscription<TestEvent>
     {
         private readonly IEventPublisher _publisher;
         private readonly ILogger _logger;
@@ -17,13 +16,13 @@ namespace InstrumentedRabbitMqDotNetClient.TestApplication
             _logger = loggerFactory.CreateLogger<TestSubscription>();
         }
 
-        public Task HandleEventAsync(string message)
+        public Task HandleEventAsync(TestEvent theEvent)
         {
-            _logger.LogInformation("The TestSubscription will handle event {event}...", message);
+            _logger.LogInformation("The TestSubscription will handle event {event}...", theEvent.EventName);
 
             _publisher.Publish(new TestEvent2());
 
-            _logger.LogInformation("The TestSubscription has finished processing event {event}.", message);
+            _logger.LogInformation("The TestSubscription has finished processing event {event}.", theEvent.EventName);
 
             return Task.CompletedTask;
         }

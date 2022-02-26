@@ -5,7 +5,7 @@ namespace InstrumentedRabbitMqDotNetClient.TestApplication
 {
     public class TestEvent2 : IEvent
     {
-        public string EventName => "test.event.another";
+        public string EventName => "test.event.two";
 
         public int HitCount => 954;
 
