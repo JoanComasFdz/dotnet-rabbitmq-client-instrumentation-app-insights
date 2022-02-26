@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InstrumentedRabbitMqDotNetClient
+namespace InstrumentedRabbitMqDotNetClient.Subscription
 {
     /// <summary>
     /// Represents an error encountered while retrieving the headers from a received message.

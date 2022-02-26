@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using InstrumentedRabbitMqDotNetClient.Contracts;
 
-namespace InstrumentedRabbitMqDotNetClient
+namespace InstrumentedRabbitMqDotNetClient.Subscription
 {
     internal interface IEventSubscriptionFactory
     {
