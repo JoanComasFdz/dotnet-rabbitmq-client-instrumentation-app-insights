@@ -9,14 +9,21 @@ Explore the `InstrumentedRabbitMqDotNetClient.TestApplication` to understand how
 `PublishEventController` => Publishes `TestEvent` => `TestSubscription` receives it and publishes `TestEvent2` => `Test2Subscription` receives it.
 
 ### Register it in Startup
-1. In `Startup.ConfigureServices()` add:
+1. In the `Startup` class, add:
 ```csharp
-services.AddRabbitMQSubscriberHostedService("name-of-the-queue");
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Other initialization logc
+        services.AddRabbitMQSubscriberHostedService("name-of-the-queue");
+    }
+}
 ```
 
 ### Create an event
 1. Declare a `record` that inherits from `IEvent`.
-```
+```csharp
 public record MyEvent : IEvent
 {
     public string EventName => "my.event";
@@ -24,7 +31,7 @@ public record MyEvent : IEvent
 ```
 ### Publish an event
 1. Inject `IEventPublisher` in a class:
-```
+```csharp
 public class MyClass
 {
     private readonly IEventPublisher _eventPublisher;
@@ -43,7 +50,7 @@ public class MyClass
 
 ### Subscribe to an event
 1. Create a class to inherit from `IEventSubscription<MyEvent>`:
-```
+```csharp
 public class MyEventSubscription : IEventSubscription<MyEvent>
 {
     public Task HandleEventAsync(MyEvent receivedEvent)
