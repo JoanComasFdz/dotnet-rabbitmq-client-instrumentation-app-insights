@@ -58,6 +58,8 @@ The aporoach is to emualte [Azure Service Bus](https://github.com/Azure/azure-sd
 
 But you do not have to do anything besides configure the Application Insights connection string.
 
+[More info](https://docs.microsoft.com/en-us/azure/azure-monitor/app/custom-operations-tracking)
+
 ### How it works
 A [DiagnosticSource](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Diagnostics.DiagnosticSource/src/DiagnosticSourceUsersGuide.md) is available in the `Instrumentation` folder (It is a simplification of the [ServiceBusDiagnosticSource](https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/servicebus/Microsoft.Azure.ServiceBus/src/ServiceBusDiagnosticsSource.cs)).
 
@@ -69,5 +71,3 @@ The `RabbitMQSubscriberHostedService` uses it to start processing the event and 
 1. [Create an Azure Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/create-new-resource).
 2. Copy the connection string.
 3. Set it in the env var `APPLICATIONINSIGHTS_CONNECTION_STRING`. When debugging, it is in the `launchSettings.json` file in th Properties folder of the TestApplication.
-
-
