@@ -10,7 +10,7 @@ Explore the `InstrumentedRabbitMqDotNetClient.TestApplication` to understand how
 
 ### Register it in Startup
 1. In `Startup.ConfigureServices()` add:
-```
+```csharp
 services.AddRabbitMQSubscriberHostedService("name-of-the-queue");
 ```
 
