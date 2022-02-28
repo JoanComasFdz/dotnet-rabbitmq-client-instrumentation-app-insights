@@ -53,7 +53,7 @@ public class MyClass
 ```csharp
 public class MyEventSubscription : IEventSubscription<MyEvent>
 {
-    public Task HandleEventAsync(MyEvent receivedEvent)
+    public Task HandleEventAsync(MyEvent receivedEvent, string operationId)
     {
         // Your logic here.
     }
