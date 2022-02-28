@@ -21,7 +21,8 @@ namespace InstrumentedRabbitMqDotNetClient.Contracts
         /// Implement the logic needed to handle the specified event.
         /// </summary>
         /// <param name="receivedEvent">An instance of the event already parsed.</param>
+        /// <param name="operationId">The id that uniquely identifies the whole trace.</param>
         /// <returns>A Task, so that the call can be awaited.</returns>
-        Task HandleEventAsync(TEvent receivedEvent);
+        Task HandleEventAsync(TEvent receivedEvent, string operationId);
     }
 }

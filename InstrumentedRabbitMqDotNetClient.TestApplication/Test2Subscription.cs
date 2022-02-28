@@ -13,13 +13,13 @@ namespace InstrumentedRabbitMqDotNetClient.TestApplication
             _logger = loggerFactory.CreateLogger<Test2Subscription>();
         }
 
-        public async Task HandleEventAsync(TestEvent2 theEvent)
+        public async Task HandleEventAsync(TestEvent2 theEvent, string operationId)
         {
-            _logger.LogInformation("The Test2Subscription2 will handle event {event}...", theEvent.EventName);
+            _logger.LogInformation("[OperationId: {operationId}] The Test2Subscription2 will handle event {event}...", operationId, theEvent.EventName);
 
             await Task.Delay(130);
 
-            _logger.LogInformation("The Test2Subscription2 has finished processing event {event}.", theEvent.EventName);
+            _logger.LogInformation("[OperationId: {operationId}] The Test2Subscription2 has finished processing event {event}.", operationId, theEvent.EventName);
         }
     }
 }

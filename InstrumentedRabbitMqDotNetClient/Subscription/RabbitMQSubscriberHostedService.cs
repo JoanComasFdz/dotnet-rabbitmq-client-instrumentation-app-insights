@@ -173,7 +173,7 @@ namespace InstrumentedRabbitMqDotNetClient.Subscription
                 var parsedEvent = (IEvent) JsonConvert.DeserializeObject(content, eventType);
                 wrapper = _eventSubscriptionFactory.CreateEventBusSubscription(scope.ServiceProvider, eventName);
                 
-                await wrapper.HandleEventAsync(parsedEvent);
+                await wrapper.HandleEventAsync(parsedEvent, requestId);
             }
             catch (Exception ex)
             {

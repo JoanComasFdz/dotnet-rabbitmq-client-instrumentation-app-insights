@@ -16,11 +16,11 @@ internal class EventSubscriptionWrapper : IEventSubscription<IEvent>
 
     public Type SubscriptionType { get; private set; }
 
-    public Task HandleEventAsync(IEvent receivedEvent)
+    public Task HandleEventAsync(IEvent receivedEvent, string operationId)
     {
         return (Task) _subscriptionInstance
             .GetType()
             .GetMethod("HandleEventAsync")
-            .Invoke(_subscriptionInstance, new []{ receivedEvent });
+            .Invoke(_subscriptionInstance, new object[]{ receivedEvent, operationId });
     }
 }
